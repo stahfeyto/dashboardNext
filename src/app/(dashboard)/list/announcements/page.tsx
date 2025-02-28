@@ -1,6 +1,4 @@
-import FormModal from "@/components/FormModal";
-import Pagination from "@/components/Pagination";
-import Table from "@/components/Table";
+
 import TableSearch from "@/components/TableSearch";
 import { announcementsData, role } from "@/lib/data";
 import Image from "next/image";
@@ -45,8 +43,7 @@ const AnnouncementListPage = () => {
         <div className="flex items-center gap-2">
           {role === "admin" && (
             <>
-              <FormModal table="announcement" type="update" data={item} />
-              <FormModal table="announcement" type="delete" id={item.id} />
+
             </>
           )}
         </div>
@@ -71,15 +68,12 @@ const AnnouncementListPage = () => {
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
             {role === "admin" && (
-              <FormModal table="announcement" type="create" />
+
             )}
           </div>
         </div>
       </div>
-      {/* LIST */}
-      <Table columns={columns} renderRow={renderRow} data={announcementsData} />
-      {/* PAGINATION */}
-      <Pagination />
+
     </div>
   );
 };

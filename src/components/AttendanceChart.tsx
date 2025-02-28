@@ -1,84 +1,85 @@
 "use client";
-import Image from "next/image";
-import {
-  BarChart,
-  Bar,
-  Rectangle,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
 
-const data = [
-  {
-    name: "Mon",
-    present: 60,
-    absent: 40,
+import Image from "next/image";
+import dynamic from "next/dynamic";
+
+// Importa ECharts de forma dinâmica para evitar erros no Next.js
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
+
+// Dados das vendas semanais
+const data = {
+  days: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+  Mercedes: [320, 400, 170, 390, 420, 500, 530],
+  BMW: [290, 350, 330, 370, 400, 460, 480],
+  Audi: [180, 220, 210, 250, 270, 320, 340],
+};
+
+// Configuração do gráfico
+const options = {
+  tooltip: {
+    trigger: "axis",
   },
-  {
-    name: "Tue",
-    present: 70,
-    absent: 60,
+  legend: {
+    data: ["Mercedes", "BMW", "Audi"],
+    bottom: 0,
+    textStyle: { fontSize: 14, color: "#333" },
   },
-  {
-    name: "Wed",
-    present: 90,
-    absent: 75,
+  grid: {
+    left: "3%",
+    right: "4%",
+    bottom: "10%",
+    containLabel: true,
   },
-  {
-    name: "Thu",
-    present: 90,
-    absent: 75,
+  xAxis: {
+    type: "category",
+    data: data.days,
+    axisLabel: { color: "#000" }, // Eixo X com texto preto
+    axisLine: { lineStyle: { color: "#888" } },
   },
-  {
-    name: "Fri",
-    present: 65,
-    absent: 55,
+  yAxis: {
+    type: "value",
+    axisLabel: { color: "#000" }, // Eixo Y com texto preto
+    splitLine: { lineStyle: { color: "rgba(0,0,0,0.2)" } },
   },
-];
+  series: [
+    {
+      name: "Mercedes",
+      type: "bar",
+      data: data.Mercedes,
+      itemStyle: { color: "#C0C0C0", borderRadius: [10, 10, 0, 0] }, 
+      barWidth: "20%",
+    },
+    {
+      name: "BMW",
+      type: "bar",
+      data: data.BMW,
+      itemStyle: { color: "#0071C5", borderRadius: [10, 10, 0, 0] },
+      barWidth: "20%",
+    },
+    {
+      name: "Audi",
+      type: "bar",
+      data: data.Audi,
+      itemStyle: { color: "#FF4500", borderRadius: [10, 10, 0, 0] },
+      barWidth: "20%",
+    },
+  ],
+};
 
 const AttendanceChart = () => {
   return (
-    <div className="bg-white rounded-lg p-4 h-full">
-      <div className="flex justify-between items-center">
-        <h1 className="text-lg font-semibold">Attendance</h1>
-        <Image src="/moreDark.png" alt="" width={20} height={20} />
+    <div className="">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-xl font-semibold text-gray-700">
+        Weekly Sales by Brand
+        </h1>
+
       </div>
-      <ResponsiveContainer width="100%" height="90%">
-        <BarChart width={500} height={300} data={data} barSize={20}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ddd" />
-          <XAxis
-            dataKey="name"
-            axisLine={false}
-            tick={{ fill: "#d1d5db" }}
-            tickLine={false}
-          />
-          <YAxis axisLine={false} tick={{ fill: "#d1d5db" }} tickLine={false} />
-          <Tooltip
-            contentStyle={{ borderRadius: "10px", borderColor: "lightgray" }}
-          />
-          <Legend
-            align="left"
-            verticalAlign="top"
-            wrapperStyle={{ paddingTop: "20px", paddingBottom: "40px" }}
-          />
-          <Bar
-            dataKey="present"
-            fill="#FAE27C"
-            legendType="circle"
-            radius={[10, 10, 0, 0]}
-          />
-          <Bar
-            dataKey="absent"
-            fill="#C3EBFA"
-            legendType="circle"
-            radius={[10, 10, 0, 0]}
-          />
-        </BarChart>
-      </ResponsiveContainer>
+
+      {/* Gráfico */}
+      <div className="w-full h-[400px]">
+        <ReactECharts option={options} style={{ height: "100%", width: "100%" }} />
+      </div>
     </div>
   );
 };
