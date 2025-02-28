@@ -1,6 +1,9 @@
+"use client";
+
 import { role } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const menuItems = [
   {
@@ -12,7 +15,6 @@ const menuItems = [
         href: "/",
         visible: ["admin"],
       },
-
     ],
   },
   {
@@ -24,11 +26,10 @@ const menuItems = [
         href: "/profile",
         visible: ["admin", "teacher", "student", "parent"],
       },
-
       {
         icon: "/logout.png",
         label: "Logout",
-        href: "/logout",
+        action: "logout",
         visible: ["admin", "teacher", "student", "parent"],
       },
     ],
@@ -36,6 +37,14 @@ const menuItems = [
 ];
 
 const Menu = () => {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // Aqui você pode remover o token ou qualquer dado de autenticação
+    localStorage.removeItem("userToken"); // Exemplo de remoção de token
+    router.push("/sign-in"); // Redireciona para a página de login
+  };
+
   return (
     <div className="mt-4 text-sm">
       {menuItems.map((i) => (
@@ -45,7 +54,16 @@ const Menu = () => {
           </span>
           {i.items.map((item) => {
             if (item.visible.includes(role)) {
-              return (
+              return item.action === "logout" ? (
+                <button
+                  key={item.label}
+                  onClick={handleLogout}
+                  className="flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-2 rounded-md hover:bg-lamaSkyLight w-full text-left"
+                >
+                  <Image src={item.icon} alt="" width={20} height={20} />
+                  <span className="hidden lg:block">{item.label}</span>
+                </button>
+              ) : (
                 <Link
                   href={item.href}
                   key={item.label}
